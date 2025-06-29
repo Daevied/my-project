@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+  color: #e8e8e8;
+}
+
+main {
+  color: black;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.To-do-container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push footer to the bottom */
+  height: 100%;
+  width: 100%;
+  max-width: 500px;  /* Optional: set a max width */
+  min-height: 700px;
+  padding: 20px;
+}
+
+.task-list {
+  flex-grow: 1;
+}
+
+h1 {
+  margin-bottom: 5px
+}
+
+.time-display {
+  font-size: 1.2rem;
+  color: #a2a0a0c7;
+  margin-top: 0px
+}
+.input-container {
+  color: #e8e8e8;
+  padding: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 10px;
+}
+.input-container input {
+  font-size: 1.2em;
+  border: none;
+  outline: none;
+  width: 80%;
+ 
+}
+.input-container button {
+  background-color: purple;
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;        /* optional: pointer cursor on hover */
+  
+  
+}
+
+.task-container {
+  font-size: 1.2rem;
+  /*background-color: aquamarine;*/
+  margin-top: 20px;
+  margin-left: 0px;
+  padding: 20px;
+  display: flex; 
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e8e8e8 ;
+}
+.sub-task-container {
+  display: flex;
+  align-items: center; 
+  gap: 10px;
+}
+.sub-task-container p {
+  margin: 0px;
+}
+
+.sub-task-container input[type='checkbox'] {
+  transform: scale(1.5);
+  width: 12px;
+  height: 12px;
+}
+
+.task-container button {
+  border: none;           
+  background: none;      
+  box-shadow: none;                  
+  cursor: pointer;       
+}
+
+.task-container button img {
+  display: block;         
+  width: 30px;            
+  height: auto;
+}
+
+
+.footer-container {
+  color: whitesmoke;
+  z-index: 100;
+  background-color: purple;
+  margin-top: 5px;
+  padding: 10px;
+  
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer-container button {
+  color: whitesmoke;
+  border: none;           
+  background: none;      
+  box-shadow: none;                  
+  cursor: pointer;       
+}
+
