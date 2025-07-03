@@ -36,30 +36,48 @@ function renderTasks(filter = "all") {
     filteredTasks = tasks.filter(task => task.completed);
   }
 
+    if (filteredTasks.length === 0) {
+    // ✅ Show message if no task matches the filter
+    let message = "";
+    if (filter === "active") message = "No active tasks available.";
+    else if (filter === "completed") message = "No completed tasks available.";
+
+    taskContainer.innerHTML = `<p class="empty-message">${message}</p>`;
+    return;
+  }
+
   filteredTasks.forEach(task => {
     taskContainer.innerHTML += `
       <div class="task-container" data-id="${task.id}">
         <div class="sub-task-container">
           <input type="checkbox" class="task-checkbox" ${task.completed ? "checked" : ""}>
-          <p>${task.title}</p>
+          <p contenteditable="true" class="editP">${task.title}</p>
         </div>
-        <button><img src="icon/trash-alt (2).png" alt=""></button>
+        <button class="delete-btn" data-id="${task.id}"><img src="icon/trash-alt (2).png" alt=""></button>
       </div>
     `;
   });
 };
 
+let currentFilter = "all"
+
 document.querySelector('.js-show-all').addEventListener("click", () => {
-   renderTasks("all");
+  currentFilter = "all"
+   renderTasks(currentFilter);
+   localStorage.setItem("filter", currentFilter);
 });
 
 document.querySelector('.js-show-active').addEventListener("click", () => {
-  renderTasks("active");
+  currentFilter = "active"
+  renderTasks(currentFilter);
+  localStorage.setItem("filter", currentFilter);
 });
 document.querySelector('.js-show-completed').addEventListener("click", () => {
-  renderTasks("completed");
+  currentFilter = "completed"
+  renderTasks(currentFilter);
+  localStorage.setItem("filter", currentFilter);
+  saveTasks();
 });
-
 
 function loadTasks() {
   const stored = localStorage.getItem("tasks");
@@ -81,8 +99,7 @@ function addTask(title) {
   };
   tasks.push(newTask);
   updateUI();
-
-  console.log(tasks);
+  saveTasks();
 };
 
 function toggleComplete(id) {
@@ -90,6 +107,7 @@ function toggleComplete(id) {
   if (task) {
     task.completed = !task.completed;
     updateUI();
+    saveTasks();
   }
 };
 
@@ -97,11 +115,55 @@ function toggleComplete(id) {
 function deleteTask(id) {
   tasks = tasks.filter(task => task.id !== id);
   updateUI();
+  saveTasks();
 };
+
+const modal = document.querySelector(".deleteModal");
+const confirmBtn = document.querySelector(".confirmDelete");
+const cancelBtn = document.querySelector(".cancelDelete");
+
+confirmBtn.addEventListener("click", () => {
+  if (taskIdToDelete !== null) {
+    deleteTask(taskIdToDelete);
+    taskIdToDelete = null;
+  }
+// Hide modal
+modal.classList.remove("show");
+});
+
+cancelBtn.addEventListener("click", () => {
+  // Hide modal
+modal.classList.remove("show");
+  taskIdToDelete = null;
+});
+
+document.querySelector('.js-task-list').addEventListener("input", (e) => {
+  if (e.target.classList.contains("editP")) {
+    const taskContainer = e.target.closest(".task-container");
+    const id = Number(taskContainer.dataset.id);
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      task.title = e.target.textContent.trim();
+      saveTasks(); // persist changes
+    }
+  }
+
+});
+
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    button.click(); // trigger add
+  }
+});
+
+
+
+
 
 
 function updateUI() {
-  const taskList = document.querySelector('.js-task-list');
+  renderTasks(currentFilter);
+  /*const taskList = document.querySelector('.js-task-list');
 
   let html = "";
   tasks.forEach(task => {
@@ -109,29 +171,42 @@ function updateUI() {
       <div class="task-container" data-id="${task.id}">
         <div class="sub-task-container">
           <input type="checkbox" class="task-checkbox" ${task.completed ? "checked" : ""}>
-          <p>${task.title}</p>
+          <p contenteditable ="true" class="editP">${task.title}</p>
         </div>
-        <button><img src="icon/trash-alt (2).png" alt=""></button>
+        <button class="delete-btn" data-id="${task.id}"><img src="icon/trash-alt (2).png" alt=""></button>
       </div>
     `;
     
   });
-  taskList.innerHTML = html;
+  taskList.innerHTML = html;*/
 };
 
-document.querySelector('.js-task-list').addEventListener('click', (e) => {
-    const taskContainer = e.target.closest('.task-container');
-    if (!taskContainer) return;
-    
-    const id = Number(taskContainer.dataset.id);
-    
-    if(e.target.closest('button')) {
-      deleteTask(id);
-    };
+let taskIdToDelete = null;
 
-    if (e.target.matches('.task-checkbox')) {
+document.querySelector('.js-task-list').addEventListener('click', (e) => {
+  const taskContainer = e.target.closest('.task-container');
+  if (!taskContainer) return;
+
+  const id = Number(taskContainer.dataset.id);
+
+  // Open modal when delete button is clicked
+    if (e.target.closest('button.delete-btn')) {
+      taskIdToDelete = id;
+      modal.classList.add("show"); // ✅ toggle class instead
+      return;
+    }
+
+
+  if (e.target.matches('.task-checkbox')) {
     toggleComplete(id);
   }
-})
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const savedFilter = localStorage.getItem("filter");
+  if (savedFilter) currentFilter = savedFilter;
+  loadTasks();
+  renderTasks(currentFilter);
+});
 
 

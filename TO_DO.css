@@ -96,6 +96,8 @@ h1 {
 }
 .sub-task-container p {
   margin: 0px;
+  padding: 4px;
+  outline: none;
 }
 
 .sub-task-container input[type='checkbox'] {
@@ -116,6 +118,47 @@ h1 {
   width: 30px;            
   height: auto;
 }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-content button {
+  color: whitesmoke;
+  background-color: purple;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.confirmDelete {
+  margin-right: 5px;
+}
+
+.empty-message {
+  font-size: 1.5rem;
+  text-align: center;
+  color: gray;
+  margin-top: 200px;
+  font-style: italic;
+}
+
 
 
 .footer-container {
