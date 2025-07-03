@@ -79,6 +79,13 @@ document.querySelector('.js-show-completed').addEventListener("click", () => {
   saveTasks();
 });
 
+document.querySelector('.js-task-list').addEventListener("keydown", (e) => {
+  if (e.target.classList.contains("editP") && e.key === "Enter") {
+    e.preventDefault(); 
+    e.target.blur();  
+  }
+});
+
 function loadTasks() {
   const stored = localStorage.getItem("tasks");
   if (stored) {
@@ -137,18 +144,24 @@ modal.classList.remove("show");
   taskIdToDelete = null;
 });
 
-document.querySelector('.js-task-list').addEventListener("input", (e) => {
+document.querySelector('.js-task-list').addEventListener("blur", (e) => {
   if (e.target.classList.contains("editP")) {
     const taskContainer = e.target.closest(".task-container");
     const id = Number(taskContainer.dataset.id);
     const task = tasks.find(t => t.id === id);
+
     if (task) {
-      task.title = e.target.textContent.trim();
-      saveTasks(); // persist changes
+      const newText = e.target.textContent.trim();
+      if (newText) {
+        task.title = newText;
+        saveTasks();
+      } else {
+        e.target.textContent = task.title; // restore original title
+      }
     }
   }
+}, true); 
 
-});
 
 input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
